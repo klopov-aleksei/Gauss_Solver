@@ -46,16 +46,31 @@ int main(int argc, char** argv)
             A(i, j) = rows[i][j];
     }
 
+    auto it = parser.begin();
+    std::vector<std::string> header;
+    for (const auto& cell : *it)
+        header.push_back(std::string(cell.raw()));
+    ++it;
+
+    if (static_cast<int>(header.size()) != static_cast<int>(rows[0].size()))
+    {
+        std::cerr << "Header length and row length mismatch";
+        return 1;
+    }
+
     try
     {
         Eigen::VectorXd x = gauss(A);
         std::ofstream ofs("result.csv");
         if (!ofs) throw std::runtime_error("Cannot open result.csv for writing");
+        for (int j = 0; j < n; ++j)
+        {
+            ofs << header[j] << (j + 1 < n ? "," : " ");
+        }
         for (int i = 0; i < x.size(); ++i)
         {
-            ofs << x(i) << (i + 1 < x.size() ? "," : " ");
+            ofs << x(i) << (i + 1 < x.size() ? ", " : " ");
         }
-        std::cout << "Solution written to result.csv";
     }
     catch (const std::exception& e)
     {

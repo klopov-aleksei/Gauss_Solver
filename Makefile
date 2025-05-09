@@ -1,26 +1,25 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -I. $(shell pkg-config --cflags eigen3)
-LDFLAGS = $(shell pkg-config --libs eigen3) -llazycsv
+CXXFLAGS = -std=c++17 -I. -I/opt/homebrew/opt/eigen/include/eigen3 -I/opt/homebrew/opt/googletest/include
+LDFLAGS = -L/opt/homebrew/opt/googletest/lib
 
 TARGET = gauss_solver
-TEST   = test
+TEST_BIN = test
 
-GAUSS_SRC = gauss.cpp
-MAIN_SRC  = main.cpp
-TEST_SRC  = test.cpp
+GAUSS_SRCS = gauss.cpp main.cpp
+TEST_SRCS = gauss.cpp test.cpp
 
 all: $(TARGET)
 
-$(TARGET): $(GAUSS_SRC) $(MAIN_SRC) gauss.hpp
-	$(CXX) $(CXXFLAGS) -o $@ $(GAUSS_SRC) $(MAIN_SRC) $(LDFLAGS)
+$(TARGET): gauss.h $(GAUSS_SRCS)
+	$(CXX) $(CXXFLAGS) -o $@ $(GAUSS_SRCS) $(LDFLAGS)
 
-$(TEST): $(GAUSS_SRC) $(TEST_SRC) gauss.hpp
-	$(CXX) $(CXXFLAGS) -o $@ $(GAUSS_SRC) $(TEST_SRC) $(LDFLAGS) -lgtest -lpthread
+run_tests: $(TEST_BIN)
+	./$(TEST_BIN)
 
-test: $(TEST)
-	./$(TEST)
+$(TEST_BIN): gauss.h $(TEST_SRCS)
+	$(CXX) $(CXXFLAGS) -o $@ $(TEST_SRCS) $(LDFLAGS) -lgtest -lpthread
 
 clean:
-	rm -f $(TARGET) $(TEST) result.csv
+	rm -f $(TARGET) $(TEST_BIN) result.csv
 
-.PHONY: all test clean
+.PHONY: all run_tests clean
