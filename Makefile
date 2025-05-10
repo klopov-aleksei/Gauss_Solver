@@ -1,6 +1,6 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -I. -I/opt/homebrew/opt/eigen/include/eigen3 -I/opt/homebrew/opt/googletest/include
-LDFLAGS = -L/opt/homebrew/opt/googletest/lib
+CXXFLAGS = -std=c++17 -I. -I/usr/include/eigen3
+LDFLAGS = -lgtest -lpthread
 
 TARGET = gauss_solver
 TEST_BIN = test
@@ -17,7 +17,7 @@ run_tests: $(TEST_BIN)
 	./$(TEST_BIN)
 
 $(TEST_BIN): gauss.h $(TEST_SRCS)
-	$(CXX) $(CXXFLAGS) -o $@ $(TEST_SRCS) $(LDFLAGS) -lgtest -lpthread
+	$(CXX) $(CXXFLAGS) -o $@ $(TEST_SRCS) $(LDFLAGS)
 
 clean:
 	rm -f $(TARGET) $(TEST_BIN) result.csv
