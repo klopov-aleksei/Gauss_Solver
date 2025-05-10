@@ -17,12 +17,6 @@ int main(int argc, char** argv)
 
     std::vector<std::vector<double>> rows;
     lazycsv::parser parser(argv[1]);
-    auto it{ parser.begin() };
-    if (it == parser.end())
-    {
-        std::cerr << "Empty or invalid CSV" << std::endl;
-        return 1;
-    }
     for (const auto& row : parser)
     {
         std::vector<double> r{};
@@ -39,9 +33,8 @@ int main(int argc, char** argv)
         return 1;
     }
     std::vector<std::string> header;
-    for (const auto& cell : *it)
+    for (const auto& cell : parser.header())
         header.push_back(std::string(cell.raw()));
-    ++it;
     const int m{ static_cast<int>(header.size()) };
     if (m != static_cast<int>(rows[0].size()))
     {

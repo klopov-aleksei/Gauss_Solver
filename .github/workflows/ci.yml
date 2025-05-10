@@ -7,35 +7,18 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build_and_test:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
-    - name: Checkout repository
 
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential cmake libeigen3-dev libgtest-dev
-        # Build and install GoogleTest
-        cd /usr/src/googletest
-        sudo cmake .
-        sudo make
-        sudo cp lib/*.a /usr/lib
+        sudo apt-get install -y build-essential libeigen3-dev libgtest-dev libgmock-dev
 
-    - name: Build project
-      run: make
-
-  test:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Install dependencies
+    - name: Build and test
       run: |
-        sudo apt-get update
-        sudo apt-get install -y build-essential cmake libeigen3-dev libgtest-dev
-    - name: Run tests
-      run: make run_tests
+        make
+        make run_tests
