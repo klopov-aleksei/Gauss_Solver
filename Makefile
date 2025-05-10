@@ -1,6 +1,6 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -I. -I/opt/homebrew/opt/eigen/include/eigen3 -I/opt/homebrew/opt/googletest/include
-LDFLAGS = -L/opt/homebrew/opt/googletest/lib
+CXXFLAGS = -std=c++17 -I. $(shell pkg-config --cflags eigen3)
+LDFLAGS = $(shell pkg-config --libs eigen3)
 
 TARGET = gauss_solver
 TEST_BIN = test
